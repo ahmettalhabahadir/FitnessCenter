@@ -1,0 +1,87 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="hero-section bg-primary text-white text-center py-5 mb-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Fitness Merkezi'ne Hoş Geldiniz</h1>
+        <p class="lead mb-4">Fitness yolculuğunuzu kapsamlı spor salonu yönetim sistemimizle yönetin</p>
+        @if (!User.Identity?.IsAuthenticated == true)
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-light btn-lg me-2">Başlayın</a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">Giriş Yap</a>
+        }
+        else
+        {
+            <a asp-controller="Appointments" asp-action="Create" class="btn btn-light btn-lg">Randevu Al</a>
+        }
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title text-primary">🏋️ Spor Salonları</h3>
+                    <p class="card-text">Fitness merkezlerimizi keşfedin ve antrenmanınız için mükemmel lokasyonu bulun.</p>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Gyms" asp-action="Index" class="btn btn-primary">Spor Salonlarını Yönet</a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title text-primary">💪 Hizmetler</h3>
+                    <p class="card-text">Yogadan kişisel antrenmana kadar geniş fitness hizmet yelpazemizi keşfedin.</p>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Services" asp-action="Index" class="btn btn-primary">Hizmetleri Yönet</a>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title text-primary">👨‍🏫 Antrenörler</h3>
+                    <p class="card-text">Fitness hedeflerinize ulaşmak için profesyonel antrenörlerle bağlantı kurun.</p>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Trainers" asp-action="Index" class="btn btn-primary">Antrenörleri Yönet</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Hızlı İşlemler</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <a asp-controller="Appointments" asp-action="Index" class="btn btn-outline-primary w-100">
+                                    <i class="bi bi-calendar-check"></i> Randevularımı Görüntüle
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a asp-controller="Appointments" asp-action="Create" class="btn btn-outline-success w-100">
+                                    <i class="bi bi-plus-circle"></i> Yeni Randevu Al
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

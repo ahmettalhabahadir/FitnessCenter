@@ -1,0 +1,130 @@
+@model FitnessCenter.Models.ViewModels.CreateAppointmentViewModel
+
+@{
+    ViewData["Title"] = "Randevu Al";
+}
+
+<div class="container mt-4">
+    <h2>Yeni Randevu Al</h2>
+    <hr />
+    
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="GymId" class="form-label">Spor Salonu</label>
+                    <select asp-for="GymId" class="form-select" asp-items="ViewBag.GymId">
+                        <option value="">-- Spor Salonu Seçin --</option>
+                    </select>
+                    <span asp-validation-for="GymId" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="ServiceId" class="form-label">Hizmet</label>
+                    <select asp-for="ServiceId" class="form-select" asp-items="ViewBag.ServiceId">
+                        <option value="">-- Hizmet Seçin --</option>
+                    </select>
+                    <span asp-validation-for="ServiceId" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="TrainerId" class="form-label">Antrenör</label>
+                    <select asp-for="TrainerId" class="form-select" asp-items="ViewBag.TrainerId">
+                        <option value="">-- Antrenör Seçin --</option>
+                    </select>
+                    <span asp-validation-for="TrainerId" class="text-danger"></span>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Date" class="form-label">Tarih</label>
+                        <input asp-for="Date" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                        <span asp-validation-for="Date" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="StartTime" class="form-label">Başlangıç Saati</label>
+                        <input asp-for="StartTime" class="form-control" type="time" />
+                        <span asp-validation-for="StartTime" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Notes" class="form-label">Notlar (İsteğe Bağlı)</label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <input type="submit" value="Randevu Al" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Antrenör-Hizmet ilişkilerini JavaScript'e aktar
+        var trainerServices = @Html.Raw(ViewBag.TrainerServicesJson);
+        var allTrainers = @Html.Raw(ViewBag.AllTrainersJson);
+        
+        $(document).ready(function() {
+            var serviceSelect = $('#ServiceId');
+            var trainerSelect = $('#TrainerId');
+            
+            // Hizmet seçildiğinde antrenörleri filtrele
+            serviceSelect.on('change', function() {
+                var selectedServiceId = parseInt($(this).val());
+                
+                // Önce dropdown'ı temizle
+                trainerSelect.empty();
+                trainerSelect.append('<option value="">-- Antrenör Seçin --</option>');
+                
+                if (selectedServiceId) {
+                    // Seçilen hizmeti verebilen antrenörleri bul
+                    var availableTrainerIds = trainerServices
+                        .filter(ts => ts.ServiceId === selectedServiceId)
+                        .map(ts => ts.TrainerId);
+                    
+                    // Bu antrenörleri dropdown'a ekle
+                    allTrainers.forEach(function(trainer) {
+                        if (availableTrainerIds.includes(trainer.Id)) {
+                            trainerSelect.append(
+                                $('<option></option>')
+                                    .attr('value', trainer.Id)
+                                    .text(trainer.Name)
+                            );
+                        }
+                    });
+                    
+                    if (availableTrainerIds.length === 0) {
+                        trainerSelect.append('<option value="">Bu hizmet için antrenör bulunamadı</option>');
+                    }
+                } else {
+                    // Hizmet seçilmediyse tüm antrenörleri göster
+                    allTrainers.forEach(function(trainer) {
+                        trainerSelect.append(
+                            $('<option></option>')
+                                .attr('value', trainer.Id)
+                                .text(trainer.Name)
+                        );
+                    });
+                }
+            });
+        });
+    </script>
+}
+

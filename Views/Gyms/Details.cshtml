@@ -1,0 +1,42 @@
+@model FitnessCenter.Models.Gym
+
+@{
+    ViewData["Title"] = "Spor Salonu Detayları";
+}
+
+<div class="container mt-4">
+    <h2>Spor Salonu Detayları</h2>
+    <hr />
+    
+    <dl class="row">
+        <dt class="col-sm-2">Ad</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+        
+        <dt class="col-sm-2">Adres</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Address)</dd>
+        
+        <dt class="col-sm-2">Telefon</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Phone)</dd>
+        
+        <dt class="col-sm-2">E-posta</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Email)</dd>
+        
+        <dt class="col-sm-2">Açılış Saati</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.OpeningTime)</dd>
+        
+        <dt class="col-sm-2">Kapanış Saati</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.ClosingTime)</dd>
+        
+        <dt class="col-sm-2">Çalışma Saatleri</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.WorkingHours)</dd>
+        
+        <dt class="col-sm-2">Açıklama</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
+    </dl>
+    
+    <div class="mt-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Düzenle</a>
+        <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+    </div>
+</div>
+

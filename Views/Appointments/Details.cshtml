@@ -1,0 +1,56 @@
+@model FitnessCenter.Models.Appointment
+
+@{
+    ViewData["Title"] = "Randevu Detayları";
+}
+
+<div class="container mt-4">
+    <h2>Randevu Detayları</h2>
+    <hr />
+    
+    <dl class="row">
+        <dt class="col-sm-2">Üye</dt>
+        <dd class="col-sm-10">@(Model.Member?.ApplicationUser?.Email ?? "N/A")</dd>
+        
+        <dt class="col-sm-2">Antrenör</dt>
+        <dd class="col-sm-10">@(Model.Trainer?.FirstName) @(Model.Trainer?.LastName)</dd>
+        
+        <dt class="col-sm-2">Hizmet</dt>
+        <dd class="col-sm-10">@(Model.Service?.Name)</dd>
+        
+        <dt class="col-sm-2">Spor Salonu</dt>
+        <dd class="col-sm-10">@(Model.Gym?.Name)</dd>
+        
+        <dt class="col-sm-2">Başlangıç Tarihi & Saati</dt>
+        <dd class="col-sm-10">@Model.StartDateTime.ToString("dd/MM/yyyy HH:mm")</dd>
+        
+        <dt class="col-sm-2">Bitiş Tarihi & Saati</dt>
+        <dd class="col-sm-10">@Model.EndDateTime.ToString("dd/MM/yyyy HH:mm")</dd>
+        
+        <dt class="col-sm-2">Süre</dt>
+        <dd class="col-sm-10">@((Model.EndDateTime - Model.StartDateTime).TotalMinutes) dakika</dd>
+        
+        <dt class="col-sm-2">Fiyat</dt>
+        <dd class="col-sm-10">@Model.PriceAtBooking.ToString("C")</dd>
+        
+        <dt class="col-sm-2">Durum</dt>
+        <dd class="col-sm-10">
+            <span class="badge @(Model.Status == AppointmentStatus.Approved ? "bg-success" : 
+                                Model.Status == AppointmentStatus.Cancelled ? "bg-danger" : "bg-warning")">
+                @(Model.Status == AppointmentStatus.Pending ? "Beklemede" : 
+                  Model.Status == AppointmentStatus.Approved ? "Onaylandı" : "İptal Edildi")
+            </span>
+        </dd>
+        
+        @if (!string.IsNullOrEmpty(Model.Notes))
+        {
+            <dt class="col-sm-2">Notlar</dt>
+            <dd class="col-sm-10">@Model.Notes</dd>
+        }
+    </dl>
+    
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">Listeye Dön</a>
+    </div>
+</div>
+
